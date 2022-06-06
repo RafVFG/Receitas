@@ -1,7 +1,12 @@
-interface Ingredient {
+interface NewIngredient {
     name: string,
-    unit: string,
-    amaunt: number       
+    idUnit: number,
+    amaunt: string      
+}
+
+interface Ingredient {
+    id: number,
+    amaunt: string      
 }
 
 export interface Recipe {

@@ -18,10 +18,10 @@ export function recipeControler(createRecipe: createRecipeMethods): RecipeContro
             name: body.name,
             ingredients: body.ingredients,
             directions: body.directions,
-            rating: body?.rating,
-            tags: body?.tags,
-            prepTime: body?.prepTime,
-            yields: body?.yields
+            rating: !body.rating ? 'null' : body.rating,
+            tags: !body.tags ? 'null' : body.tags,
+            prepTime: !body.prepTime ? 'null' : body.prepTime,
+            yields: !body.yields ? 'null' : body.yields
         }
 
         try {
