@@ -1,9 +1,3 @@
-interface NewIngredient {
-    name: string,
-    idUnit: number,
-    amaunt: string      
-}
-
 interface Ingredient {
     id: number,
     amaunt: string      
