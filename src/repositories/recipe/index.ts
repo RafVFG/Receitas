@@ -28,13 +28,14 @@ export function recipeRepository(): RecipeRepositoryMethods {
         );
         
         const recipeIngredients = data.ingredients.map((ingredient) => {
-            return `(${insertId}, ${ingredient.id}, ${ingredient.amaunt})`
+            return `(${insertId}, ${ingredient.id}, ${ingredient.amaunt},)`
         });
 
         await database.execute(
             `insert into recipe_ingredient (
                 idRecipe,
                 idIngredient,
+                idUnit: data.idUnit,
                 amaunt)
                 values ${recipeIngredients}`
         )   

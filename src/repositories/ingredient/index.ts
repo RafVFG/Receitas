@@ -9,7 +9,6 @@ export function IngredientRepository(): IngredientRepositoryMethods {
     async function create(data: Ingredient): Promise<void> {
         const ingredient = {
             name: data.name,
-            idUnit: data.idUnit,
             amaunt: data.amaunt
         };
 
@@ -20,10 +19,13 @@ export function IngredientRepository(): IngredientRepositoryMethods {
                 amaunt)
             values (
                 '${ingredient.name}',
-                '${ingredient.idUnit}',
                 '${ingredient.amaunt}'
             );`
             
         )
+    }
+
+    return {
+        create
     }
 }
