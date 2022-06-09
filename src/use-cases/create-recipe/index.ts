@@ -10,7 +10,7 @@ export function createRecipe(recipeRepository: RecipeRepositoryMethods): createR
     if (!recipeOrError) return;
 
     recipeRepository.create(recipeOrError.getValue());
-  }
+  };
 
   return {
     run

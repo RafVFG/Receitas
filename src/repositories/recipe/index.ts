@@ -11,7 +11,7 @@ export function recipeRepository(): RecipeRepositoryMethods {
             rating: data.rating,
             prepTipe: data.prepTime,
             yields: data.yields
-        }
+        };
 
         const { insertId } = await database.execute(
             `insert into recipe (
@@ -29,7 +29,7 @@ export function recipeRepository(): RecipeRepositoryMethods {
         
         const recipeIngredients = data.ingredients.map((ingredient) => {
             return `(${insertId}, ${ingredient.id}, ${ingredient.amaunt})`
-        })
+        });
 
         await database.execute(
             `insert into recipe_ingredient (
@@ -38,7 +38,7 @@ export function recipeRepository(): RecipeRepositoryMethods {
                 amaunt)
                 values ${recipeIngredients}`
         )   
-    }
+    };
     
     return {
         create
