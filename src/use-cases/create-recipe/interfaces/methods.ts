@@ -1,5 +1,5 @@
 import { Recipe } from "../../../entities/recipe/interfaces/recipe";
 
-export interface createRecipeMethods {
+export interface CreateRecipeMethods {
     run: (data: Recipe) => Promise<void>
 }
