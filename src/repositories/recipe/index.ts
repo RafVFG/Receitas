@@ -1,6 +1,6 @@
-import { Recipe } from "../../entities/recipe/interfaces/recipe";
 import { RecipeRepositoryMethods } from "./interfaces/methods";
 import { connection } from "../../main/config/connection-mysql";
+import { Recipe } from "../../entities/recipe/interfaces/recipe";
 
 export function recipeRepository(): RecipeRepositoryMethods {
     const database = connection();
@@ -28,14 +28,14 @@ export function recipeRepository(): RecipeRepositoryMethods {
         );
         
         const recipeIngredients = data.ingredients.map((ingredient) => {
-            return `(${insertId}, ${ingredient.id}, ${ingredient.amaunt},)`
+            return `(${insertId}, ${ingredient.id}, ${ingredient.idUnit}, '${ingredient.amaunt}')`
         });
 
         await database.execute(
             `insert into recipe_ingredient (
                 idRecipe,
                 idIngredient,
-                idUnit: data.idUnit,
+                idUnit,
                 amaunt)
                 values ${recipeIngredients}`
         )   

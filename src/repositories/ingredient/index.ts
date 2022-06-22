@@ -15,7 +15,6 @@ export function IngredientRepository(): IngredientRepositoryMethods {
         await database.execute(
             `insert into ingredient (
                 name,
-                idUnit,
                 amaunt)
             values (
                 '${ingredient.name}',

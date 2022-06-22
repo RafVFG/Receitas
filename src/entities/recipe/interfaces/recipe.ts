@@ -1,11 +1,12 @@
-interface Ingredient {
+export interface Item {
     id: number,
+    idUnit: number,
     amaunt: string      
 }
 
 export interface Recipe {
     name: string,
-    ingredients: Ingredient[],
+    ingredients: Item[],
     directions: string[],
     rating?: number,
     tags?: string[],
