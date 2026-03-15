@@ -1,15 +1,15 @@
-interface Ingredient {
-    id: number,
-    amount: string
+export interface Item {
+  id: number;
+  amount: string;
 }
 
 export interface Recipe {
-    id?: number,
-    name: string,
-    ingredients: Ingredient[],
-    directions: string[],
-    rating?: number,
-    tags?: string[],
-    prepTime?: string,
-    yields?: number
+  id?: number;
+  name: string;
+  ingredients: Item[];
+  directions: string[];
+  rating?: number;
+  tags?: string[];
+  prepTime?: string;
+  yields?: number;
 }
