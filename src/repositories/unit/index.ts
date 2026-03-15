@@ -6,21 +6,21 @@ import { UnitRepositoryMethods } from "./interfaces/methods";
 export function unitRepository(): UnitRepositoryMethods {
     const database = connection();
 
-    async function create(data: Unit): Promise<void> {
-        const unit = {
-            name: data.name
-        };
-
-        await database.execute(
-            `insert into unit (
-                name)
-            values (
-                '${unit.name}'
-            );`
-        )
+    async function createOrUpdate(data: Unit): Promise<void> {
+        if (data.id) {
+            await database.execute(
+                `update unit set name = ? where id = ?`,
+                [data.name, data.id]
+            );
+        } else {
+            await database.execute(
+                `insert into unit (name) values (?)`,
+                [data.name]
+            );
+        }
     }
 
     return {
-        create
+        createOrUpdate
     }
 }

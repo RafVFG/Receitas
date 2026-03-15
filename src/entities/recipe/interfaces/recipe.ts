@@ -5,7 +5,9 @@ export interface Item {
 
 export interface Recipe {
   id?: number;
+  idUser: number;
   name: string;
+  description?: string;
   ingredients: Item[];
   directions: string[];
   rating?: number;

@@ -9,6 +9,7 @@ export function recipeController(createOrUpdateRecipe: createOrUpdateRecipeMetho
         const fieldsMissing = [];
         const res = response();
 
+        if(!body.idUser) fieldsMissing.push("idUser");
         if(!body.name) fieldsMissing.push("name");
         if(!body.ingredients || body.ingredients.length === 0) fieldsMissing.push("ingredients");
         if(!body.directions || body.directions.length === 0) fieldsMissing.push("directions");
@@ -16,7 +17,9 @@ export function recipeController(createOrUpdateRecipe: createOrUpdateRecipeMetho
 
         const recipe = {
             id: body.id ?? undefined,
+            idUser: body.idUser,
             name: body.name,
+            description: body.description ?? undefined,
             ingredients: body.ingredients,
             directions: body.directions,
             rating: body.rating ?? undefined,

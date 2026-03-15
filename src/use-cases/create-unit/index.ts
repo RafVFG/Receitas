@@ -1,15 +1,15 @@
 import { unit } from "../../entities/unit";
 import { Unit } from "../../entities/unit/interfaces/unit";
 import { UnitRepositoryMethods } from "../../repositories/unit/interfaces/methods"
-import { CreateUnitMethods } from "./interfaces/methods";
+import { CreateOrUpdateUnitMethods } from "./interfaces/methods";
 
-export function createUnit(unitRepository: UnitRepositoryMethods): CreateUnitMethods {
+export function createOrUpdateUnit(unitRepository: UnitRepositoryMethods): CreateOrUpdateUnitMethods {
     async function run(data: Unit): Promise<void> {
         const unitOrError = unit(data);
 
         if (!unitOrError) return;
 
-        unitRepository.create(unitOrError.getValue())
+        await unitRepository.createOrUpdate(unitOrError.getValue())
     };
 
     return {
