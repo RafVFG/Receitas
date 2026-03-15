@@ -6,24 +6,21 @@ import { IngredientRepositoryMethods } from "./interface/methods";
 export function IngredientRepository(): IngredientRepositoryMethods {
     const database = connection();
 
-    async function create(data: Ingredient): Promise<void> {
-        const ingredient = {
-            name: data.name,
-            idUnit: data.idUnit,
-            amaunt: data.amaunt
-        };
+    async function createOrUpdate(data: Ingredient): Promise<void> {
+        if (data.id) {
+            await database.execute(
+                `update ingredient set name = ?, idUnit = ?, amount = ? where id = ?`,
+                [data.name, data.idUnit, data.amount ?? null, data.id]
+            );
+        } else {
+            await database.execute(
+                `insert into ingredient (name, idUnit, amount) values (?, ?, ?)`,
+                [data.name, data.idUnit, data.amount ?? null]
+            );
+        }
+    }
 
-        await database.execute(
-            `insert into ingredient (
-                name,
-                idUnit,
-                amaunt)
-            values (
-                '${ingredient.name}',
-                '${ingredient.idUnit}',
-                '${ingredient.amaunt}'
-            );`
-            
-        )
+    return {
+        createOrUpdate
     }
 }

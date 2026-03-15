@@ -1,9 +1,10 @@
 interface Ingredient {
     id: number,
-    amaunt: string      
+    amount: string
 }
 
 export interface Recipe {
+    id?: number,
     name: string,
     ingredients: Ingredient[],
     directions: string[],

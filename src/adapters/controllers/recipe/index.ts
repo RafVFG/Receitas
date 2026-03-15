@@ -1,37 +1,38 @@
-import { createRecipeMethods } from "../../../use-cases/create-recipe/interfaces/methods";
+import { createOrUpdateRecipeMethods } from "../../../use-cases/create-recipe/interfaces/methods";
 import { response } from "../interfaces/status-code";
 import { HttpRequest, HttpResponse } from "./interfaces/http";
 import { RecipeControlerMethods } from "./interfaces/methods";
 
-export function recipeControler(createRecipe: createRecipeMethods): RecipeControlerMethods {
+export function recipeController(createOrUpdateRecipe: createOrUpdateRecipeMethods): RecipeControlerMethods {
     async function handle(httpRequest: HttpRequest): Promise<HttpResponse> {
         const { body } = httpRequest;
         const fieldsMissing = [];
         const res = response();
 
         if(!body.name) fieldsMissing.push("name");
-        if(body.ingredients.length == 0) fieldsMissing.push("ingredients");
-        if(body.directions.length == 0) fieldsMissing.push("directions");
+        if(!body.ingredients || body.ingredients.length === 0) fieldsMissing.push("ingredients");
+        if(!body.directions || body.directions.length === 0) fieldsMissing.push("directions");
         if(fieldsMissing.length > 0) return res.badRequest(`Missing params: ${fieldsMissing}`);
 
         const recipe = {
+            id: body.id ?? undefined,
             name: body.name,
             ingredients: body.ingredients,
             directions: body.directions,
-            rating: !body.rating ? 'null' : body.rating,
-            tags: !body.tags ? 'null' : body.tags,
-            prepTime: !body.prepTime ? 'null' : body.prepTime,
-            yields: !body.yields ? 'null' : body.yields
+            rating: body.rating ?? undefined,
+            tags: body.tags ?? undefined,
+            prepTime: body.prepTime ?? undefined,
+            yields: body.yields ?? undefined,
         }
 
         try {
-            await createRecipe.run(recipe)
+            await createOrUpdateRecipe.run(recipe)
         } catch (error) {
-            res.serverError(`Internal: ${error}`);
+            return res.serverError(`Internal: ${error}`);
         }
-        
+
         return res.ok();
-    } 
+    }
 
     return {
         handle

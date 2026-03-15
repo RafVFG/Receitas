@@ -9,12 +9,12 @@ export function connection() {
         database: process.env.DB_NAME,
     });
 
-    function execute<T>(query: string): Promise<T> {
+    function execute<T>(query: string, params: any[] = []): Promise<T> {
         return new Promise((resolve, reject) => {
             pool.getConnection((error, connection) => {
                 if(error) return reject(error);
 
-                connection.query(query, (error, data) => {
+                connection.query(query, params, (error, data) => {
                     if(error) return reject(error);
 
                     connection.release();

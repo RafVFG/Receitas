@@ -5,42 +5,35 @@ import { connection } from "../../main/config/connection-mysql";
 export function recipeRepository(): RecipeRepositoryMethods {
     const database = connection();
 
-    async function create(data: Recipe): Promise<void> {
-        const recipe = {
-            name: data.name, 
-            rating: data.rating,
-            prepTipe: data.prepTime,
-            yields: data.yields
-        };
+    async function createOrUpdate(data: Recipe): Promise<void> {
+        let recipeId = data.id;
 
-        const { insertId } = await database.execute(
-            `insert into recipe (
-                name,
-                rating,
-                prepTime,
-                yields)
-             values (
-                '${recipe.name}',
-                ${recipe.rating},
-                '${recipe.prepTipe}',
-                ${recipe.yields}
-            )`
-        );
-        
-        const recipeIngredients = data.ingredients.map((ingredient) => {
-            return `(${insertId}, ${ingredient.id}, ${ingredient.amaunt})`
-        });
+        if (recipeId) {
+            await database.execute(
+                `update recipe set name = ?, rating = ?, prepTime = ?, yields = ? where id = ?`,
+                [data.name, data.rating ?? null, data.prepTime ?? null, data.yields ?? null, recipeId]
+            );
+            await database.execute(
+                `delete from recipe_ingredient where idRecipe = ?`,
+                [recipeId]
+            );
+        } else {
+            const { insertId } = await database.execute<{ insertId: number }>(
+                `insert into recipe (name, rating, prepTime, yields) values (?, ?, ?, ?)`,
+                [data.name, data.rating ?? null, data.prepTime ?? null, data.yields ?? null]
+            );
+            recipeId = insertId;
+        }
 
-        await database.execute(
-            `insert into recipe_ingredient (
-                idRecipe,
-                idIngredient,
-                amaunt)
-                values ${recipeIngredients}`
-        )   
+        for (const ingredient of data.ingredients) {
+            await database.execute(
+                `insert into recipe_ingredient (idRecipe, idIngredient, amount) values (?, ?, ?)`,
+                [recipeId, ingredient.id, ingredient.amount ?? null]
+            );
+        }
     };
-    
+
     return {
-        create
+        createOrUpdate
     }
 }

@@ -1,11 +1,11 @@
 import { recipeRepository } from "../../repositories/recipe";
-import { createRecipe } from "../../use-cases/create-recipe";
-import { recipeControler } from "../controllers/recipe";
+import { createOrUpdateRecipe } from "../../use-cases/create-recipe";
+import { recipeController } from "../controllers/recipe";
 
-export function makeCreateRecipe() {
+export function makeCreateOrUpdateRecipe() {
     const repository = recipeRepository();
-    const useCase = createRecipe(repository);
-    const controller = recipeControler(useCase);
+    const useCase = createOrUpdateRecipe(repository);
+    const controller = recipeController(useCase);
 
     return controller;
 }
