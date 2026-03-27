@@ -17,7 +17,7 @@ export interface RecipeResult {
 
 export interface RecipeRepositoryMethods {
     createOrUpdate: (data: Recipe) => Promise<void>
-    getAll: () => Promise<RecipeResult[]>
+    getAll: (filters?: { ingredient?: string }) => Promise<RecipeResult[]>
     getById: (id: number) => Promise<RecipeResult | null>
     remove: (id: number) => Promise<void>
 }

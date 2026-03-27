@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS user (
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS ingredient (
     id     INT          NOT NULL AUTO_INCREMENT,
-    name   VARCHAR(100) NOT NULL,
-    idUnit INT          NOT NULL,
+    name   VARCHAR(100) NOT NULL UNIQUE,
+    idUnit INT          NULL,
     amount VARCHAR(50)  NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (idUnit) REFERENCES unit(id)

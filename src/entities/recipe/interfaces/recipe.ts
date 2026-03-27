@@ -1,6 +1,6 @@
 export interface Item {
-  id: number;
-  amount: string;
+  name: string;
+  amount?: string;
 }
 
 export interface Recipe {

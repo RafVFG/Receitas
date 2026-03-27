@@ -4,11 +4,12 @@ import { HttpRequest, HttpResponse } from "./interfaces/http";
 import { RecipeListControllerMethods } from "./interfaces/methods";
 
 export function recipeListController(getRecipes: GetRecipesMethods): RecipeListControllerMethods {
-    async function handle(_httpRequest: HttpRequest): Promise<HttpResponse> {
+    async function handle(httpRequest: HttpRequest): Promise<HttpResponse> {
         const res = response();
 
         try {
-            const recipes = await getRecipes.run();
+            const filters = { ingredient: httpRequest.query?.ingredient as string | undefined };
+            const recipes = await getRecipes.run(filters);
             return res.ok(recipes);
         } catch (error) {
             return res.serverError(`Internal: ${error}`);

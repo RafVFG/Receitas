@@ -28,14 +28,40 @@ export function recipeRepository(): RecipeRepositoryMethods {
     }
 
     for (const ingredient of data.ingredients) {
+      const name = ingredient.name.trim().toLowerCase();
+
+      const existing = await database.execute<{ id: number }[]>(
+        `select id from ingredient where lower(name) = ?`,
+        [name]
+      );
+
+      const ingredientId = existing[0]?.id ?? (
+        await database.execute<{ insertId: number }>(
+          `insert into ingredient (name) values (?)`,
+          [ingredient.name.trim()]
+        )
+      ).insertId;
+
       await database.execute(
         `insert into recipe_ingredient (idRecipe, idIngredient, amount) values (?, ?, ?)`,
-        [recipeId, ingredient.id, ingredient.amount ?? null],
+        [recipeId, ingredientId, ingredient.amount ?? null]
       );
     }
   }
 
-  async function getAll(): Promise<RecipeResult[]> {
+  async function getAll(filters?: { ingredient?: string }): Promise<RecipeResult[]> {
+    const params: any[] = [];
+    let where = "";
+
+    if (filters?.ingredient) {
+      where = `where exists (
+        select 1 from recipe_ingredient ri
+        join ingredient i on i.id = ri.idIngredient
+        where ri.idRecipe = r.id and lower(i.name) like ?
+      )`;
+      params.push(`%${filters.ingredient.toLowerCase()}%`);
+    }
+
     const recipes = await database.execute<RecipeResult[]>(
       `select r.*,
         (select json_arrayagg(json_object('id', i.id, 'name', i.name, 'amount', ri.amount))
@@ -44,7 +70,9 @@ export function recipeRepository(): RecipeRepositoryMethods {
         (select json_arrayagg(json_object('id', p.id, 'url', p.url, 'isPrimary', p.isPrimary))
          from recipe_photo p where p.idRecipe = r.id) as photos
        from recipe r
-       order by r.created_at desc`
+       ${where}
+       order by r.created_at desc`,
+      params
     );
     return recipes;
   }

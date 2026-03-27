@@ -1,6 +1,15 @@
 import { Ingredient } from "../../../entities/ingredient/interfaces/ingredient";
-import { Item } from "../../../entities/recipe/interfaces/recipe";
+
+export interface IngredientResult {
+    id: number
+    name: string
+    idUnit: number
+    amount: string | null
+}
 
 export interface IngredientRepositoryMethods {
-  createOrUpdate: (data: Ingredient) => Promise<void>;
+    createOrUpdate: (data: Ingredient) => Promise<void>
+    getAll: () => Promise<IngredientResult[]>
+    getById: (id: number) => Promise<IngredientResult | null>
+    del: (id: number) => Promise<void>
 }
